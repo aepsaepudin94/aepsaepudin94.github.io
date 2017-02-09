@@ -1,0 +1,17 @@
+var getAPI = function(apiName, method, postData, callback, errorCallback) {    
+    var pageUrl = 'http://localhost/project/hawk/index.php/';
+    var token = 'a73c0eeaff640a42bca56a55ad2dba7d';
+    $.post(pageUrl + 'api_' + apiName + '/' + method + '/' + token, postData, function(dt){
+      if(typeof dt === 'object') {
+        try {
+          if(dt.status_code === 403) {
+            location.href = pageUrl + 'mainpage/logout';
+            return;
+          }
+        } catch(er){}
+        if(typeof callback === 'function') callback(dt);
+      } else {
+        if(typeof errorCallback === 'function') errorCallback(dt);
+      }
+    });
+};
