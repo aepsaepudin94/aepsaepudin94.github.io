@@ -355,7 +355,7 @@ $(document).ready(function () {
         });
     };
 
-    var hawkUrl = hostName + '/hawk/index.php';
+    var hawkUrl = 'http://gps-track.intellitrac.co.id/index.php';
     var hawkPath = hostName + '/hawk/';
     var token;
 
