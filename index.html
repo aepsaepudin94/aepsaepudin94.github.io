@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="home">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -20,11 +20,37 @@
   </head>
   <body>
 
+  <!-- navbaar -->
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a href="#home" class="navbar-brand page-scroll">Aep Saepudin</a>
+      </div>
+
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a class="page-scroll" href="#about">About</a></li>
+          <li><a class="page-scroll" href="#portfolio">Portfolio</a></li>
+          <li><a class="page-scroll" href="#contact">Contact</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </nav>
+  <!-- end of navbaar -->
+
   <!-- Jumbotron -->
     <div class="jumbotron text-center">
       <img src="asset/img/aep.jpg" class="img-circle">
-      <h1>Aep Saepudin</h1>
-      <p>Web Programmer</p>
+      <h1 style="color: white;">Aep Saepudin</h1>
+      <p style="color: white;">Programmer | Colleger</p>
     </div>
   <!-- end of jumbotron -->
 
@@ -174,8 +200,10 @@
     </footer>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="asset/js/jquery.min.js"></script>
+    <script src="asset/js/jquery.easing.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="asset/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="asset/js/portfolio.js"></script>
   </body>
 </html>

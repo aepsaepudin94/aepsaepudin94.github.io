@@ -4,6 +4,7 @@ html {
 
 body {
 	margin-bottom: 120px;
+	margin-top: 30px;
 }
 
 .contact {
@@ -12,8 +13,14 @@ body {
 
 .jumbotron img {
 	width: 200px;
-	border: 3px solid #666;
+	border: 3px solid #100000;
 	cursor: pointer;
+}
+
+.jumbotron {
+	background-image: url('../img/cover.jpg');
+	background-size: cover;
+	background-position-y: -95px;
 }
 
 hr {
