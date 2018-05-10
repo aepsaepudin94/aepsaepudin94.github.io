@@ -61,22 +61,22 @@
 
 	var onSubmit = function () {
 		var resultCont = document.getElementById('hasil-container');
-		var min = document.getElementById('number-min');
-		var max = document.getElementById('number-max');
+		var min = parseInt(document.getElementById('number-min').value);
+		var max = parseInt(document.getElementById('number-max').value);
 
 		var resultGanjil = document.getElementById('result-ganjil');
 		var resultGenap  = document.getElementById('result-genap');
 		
-		if (min.value == '' || max.value == '') { return; }
-		if (min.value > max.value ) { return; }
+		if (min == '' || max == '') { return; }
+		if (min > max ) { return; }
 
 		resultCont.style.display = '';
 		resultGanjil.innerHTML = '';
 		resultGenap.innerHTML = '';
 
-		for (var i = min.value; i <= max.value; i++) {
+		for (var i = min; i <= max; i++) {
 			var li = document.createElement('li');
-			var mod_2 = parseInt(i) % 2;
+			var mod_2 = i % 2;
 
 			if (mod_2 > 0) {
 				li.innerHTML = i;
