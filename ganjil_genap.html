@@ -1,18 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Program Ganjil Gebap</title>
+	<title>Program Ganjil Genap</title>
 </head>
+<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script> -->
 <body>
-	<input id="number" type="number" min="0" name="input-number">
-	<div style="margin-top: 2px">
-		<label for="result">Hasil :</label>
-		<p id="result" style="margin-top: 2px"></p>
+	<div class="container">
+		<div class="row-fluid">
+			<div class="span12 col-md-9">
+				<input id="number" type="number" min="0" name="input-number">
+				<div style="margin-top: 2px">
+					<label for="result">Hasil :</label>
+					<p id="result" style="margin-top: 2px"></p>
+				</div>
+				<div style="margin-top: 5px">
+					<label>Min :</label>
+					<input id="number-min" type="number" min="0" name="input-number">
+					<label>Max :</label>
+					<input id="number-max" type="number" min="0" name="input-number">
+					<button id="submit">Tampilkan Hasil</button>
+					<button id="reset">Reset</button>
+					<div id="hasil-container" style="display: none;">
+						<div style="margin-top: 2px">
+							<label for="result-ganjil">Bilangan Ganjil :</label>
+							<div><ul style="margin-top: 2px" id="result-ganjil"></ul></div>
+						</div>
+						<div style="margin-top: 2px">
+							<label for="result-genap">Bilangan Genap :</label>
+							<div><ul style="margin-top: 2px" id="result-genap"></ul></div>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </body>
 <script type="text/javascript">
 	var number = document.getElementById('number');
 	var result = document.getElementById('result');
+	var submit = document.getElementById('submit');
 	var onKeyup = function (e) {
 		var value = e.target.value;
 
@@ -34,5 +62,47 @@
 
 	number.onkeyup = onKeyup;
 	number.onclick = onKeyup;
+
+	var onSubmit = function () {
+		var resultCont = document.getElementById('hasil-container');
+		var min = document.getElementById('number-min');
+		var max = document.getElementById('number-max');
+
+		var resultGanjil = document.getElementById('result-ganjil');
+		var resultGenap  = document.getElementById('result-genap');
+		
+		if (min.value == '' || max.value == '') { return; }
+
+		resultCont.style.display = '';
+		
+		console.log(min.value);
+		console.log(max.value);
+
+		for (var i = min.value; i <= max.value; i++) {
+			var li = document.createElement('li');
+
+			var mod_2 = parseInt(i) % 2;
+
+			console.log(mod_2);
+			console.log(i);
+
+			if (mod_2 > 0) {
+				li.innerHTML = i;
+				resultGanjil.appendChild(li);
+			} else {
+				li.innerHTML = i;
+				resultGenap.appendChild(li);
+			}
+		}
+	}
+
+	submit.onclick = onSubmit;
+	reset.onclick = function () {
+		document.getElementById('hasil-container').style.display = 'none';
+		document.getElementById('result-ganjil').innerHTML = '';
+		document.getElementById('result-genap').innerHTML = '';
+		document.getElementById('number-min').value = '';
+		document.getElementById('number-max').value = '';
+	}
 </script>
 </html>
