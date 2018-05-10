@@ -64,19 +64,15 @@
 		var resultGenap  = document.getElementById('result-genap');
 		
 		if (min.value == '' || max.value == '') { return; }
+		if (min.value > max.value ) { return; }
 
 		resultCont.style.display = '';
-		
-		console.log(min.value);
-		console.log(max.value);
+		resultGanjil.innerHTML = '';
+		resultGenap.innerHTML = '';
 
 		for (var i = min.value; i <= max.value; i++) {
 			var li = document.createElement('li');
-
 			var mod_2 = parseInt(i) % 2;
-
-			console.log(mod_2);
-			console.log(i);
 
 			if (mod_2 > 0) {
 				li.innerHTML = i;
