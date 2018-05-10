@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Program Ganjil Gebap</title>
+</head>
+<body>
+	<input id="number" type="number" min="0" name="input-number">
+	<div style="margin-top: 2px">
+		<label for="result">Hasil :</label>
+		<p id="result" style="margin-top: 2px"></p>
+	</div>
+</body>
+<script type="text/javascript">
+	var number = document.getElementById('number');
+	var result = document.getElementById('result');
+	var onKeyup = function (e) {
+		var value = e.target.value;
+
+		if (value === '') {
+			result.innerHTML = '';
+			return;
+		}
+
+		var mod = parseInt(value) % 2;
+
+		if (mod > 0) {
+			result.innerHTML = 'Bilangan Ganjil';
+			result.style.color = 'red';
+		} else {
+			result.innerHTML = 'Bilangan Genap';
+			result.style.color = 'green';
+		}
+	}
+
+	number.onkeyup = onKeyup;
+	number.onclick = onKeyup;
+</script>
+</html>
