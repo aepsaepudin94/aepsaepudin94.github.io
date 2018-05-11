@@ -18,8 +18,7 @@ body {
 }
 
 .jumbotron {
-	background-image: url('../img/cover.jpg');
-	background-size: cover;
+	background-image: url('../img/javascript.jpg');
 	background-position-y: -95px;
 }
 
@@ -47,7 +46,7 @@ footer {
 
 footer p {
 	color: #aaa;
-	font-size: 1em; 
+	font-size: 1em;
 }
 
 footer p i {
