@@ -31,26 +31,26 @@ var list = [
 		id: 5,
 		name: 'Bebek Bakar',
 		picture: 'bebek_bakar.jpg',
-		price: 15.000,
+		price: 18.000,
 		status: 0
 	},
 	{
 		id: 6,
 		name: 'Bebek Kremes',
 		picture: 'bebek_kremes.jpg',
-		price: 15.000,
+		price: 18.000,
 		status: 1
 	},
 	{
 		id: 7,
 		name: 'Bebek Terpedas',
 		picture: 'bebek_terpedas.jpg',
-		price: 15.000,
+		price: 18.000,
 		status: 1
 	},
 	{
 		id: 8,
-		name: 'Foody Moblie Ayam Bakar',
+		name: 'Foody Mobile Ayam Bakar',
 		picture: 'foody-mobile-ayam-bakar.jpg',
 		price: 15.000,
 		status: 1
@@ -66,14 +66,14 @@ var list = [
 		id: 10,
 		name: 'Lele Bakar',
 		picture: 'lele_bakar.jpg',
-		price: 15.000,
+		price: 13.000,
 		status: 1
 	},
 	{
 		id: 11,
 		name: 'Lele Rica',
 		picture: 'lele_rica.jpg',
-		price: 15.000,
+		price: 13.000,
 		status: 1
 	},
 ];
@@ -131,17 +131,6 @@ var bekalModule = {
 		}
 	},
 	listener: function () {
-		$('.page-scroll').on('click', function (event) {
-			event.preventDefault();
-
-			var target = $(this).attr('href');
-			var elemTarget = $(target);
-
-			$('body').animate({
-				scrollTop: elemTarget.offset().top - 50
-			}, 1000, 'easeInOutExpo');
-		});
-
 		$('.img-portfolio a').each(function (i, a) {
 			$(a).bind('click', function (e) {
 				e.preventDefault();
@@ -152,13 +141,15 @@ var bekalModule = {
 			$(btn).bind('click', bekalModule.book());
 		});
 
-		$('.book-cancel, .submit').bind('click', function () {
+		$('.book-cancel, .submit').bind('click', function (e) {
+			e.preventDefault();
 			if ($(this).text() == 'Pesan') { alert('Sucess') }
 
 			$('#book-container').fadeOut();
 			$('#menu-container').fadeIn();
 			$('#contact').fadeIn();
 			$('.jumbotron').fadeIn();
+			$(document).scrollTop(0);
 		});
 
 		var calculatePrice = function () {
@@ -169,6 +160,20 @@ var bekalModule = {
 		}
 
 		$('#total-book').bind('click keyup', calculatePrice);
+
+		$('#menu-nav').bind('click', function (e) {
+			e.preventDefault();
+			$(document).scrollTop(424);
+		});
+
+		$('#about-nav').bind('click', function (e) {
+			e.preventDefault();
+			$(document).scrollTop(0);
+		});
+
+		$('#contact-nav').bind('click', function (e) {
+			$(document).scrollTop(1619);
+		});
 	}
 };
 
