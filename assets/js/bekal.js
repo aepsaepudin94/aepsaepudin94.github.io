@@ -127,6 +127,7 @@ var bekalModule = {
 			$('#contact').fadeOut();
 			$('.jumbotron').fadeOut();
 			$('#book-container').fadeIn();
+			$(document).scrollTop(0);
 		}
 	},
 	listener: function () {
