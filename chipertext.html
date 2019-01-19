@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" id="home">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Chipertext Generator | Aep Saepudin</title>
+    <!-- <link href="assets/css/bootstrap.min.css" rel="stylesheet"> -->
+    <style type="text/css">
+	    table {
+			border-collapse: collapse;	    	
+	    }
+    	table, th, td {
+    		border: 1px solid black;
+    	}
+    	table td {
+    		padding: 5px;
+    	}
+			#result {
+				display: none;
+			}
+    </style>
+  </head>
+<body>
+	<div class="container">
+		<div>
+			<label style="display: block" for="move-val">Geser:</label>
+			<input id="move-val" type="number">
+		</div>
+		<div>
+			<label style="display: block" for="plaintext-val">Plaintext:</label>
+			<input id="plaintext-val" type="text">
+		</div>
+		<div>
+			<button onclick="kosongkan()" style="margin-top: 5px">Reset</button>
+			<button onclick="createKotakAbjad()" id="generate" style="margin-top: 5px">Generate</button>
+		</div>
+		<hr>
+		<div id="result">
+			<div style="margin-top: 5px;">
+				<label style="display: block" for="original-abjad">Origin Abjad:</label>
+				<table id="original-abjad"></table>
+			</div>
+			<div style="margin-top: 5px;">
+				<label style="display: block" for="result-abjad">Result Abjad:</label>
+				<table id="result-abjad"></table>
+			</div>
+			<div style="margin-top: 5px;">
+				<label for="result-abjad">Chipertext:</label>
+				<span id="chipertext-result"></span>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	var createKotakAbjad = function () {
+		var moveVal = document.getElementById('move-val').value;
+		var plaintext = document.getElementById('plaintext-val').value.toUpperCase();
+		var isEmty = moveVal == '' || plaintext == '';
+
+		if (isEmty) {
+			alert('Tidak boleh kosong.');
+			return false;
+		} 
+
+		document.getElementById('result').style.display = 'block';
+		var abjad = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		var arrAbj = abjad.split('');
+		var oriAbjadTable = document.getElementById('original-abjad');
+		
+		var tbodyAbjad = document.createElement('tbody');
+		var trText = document.createElement('tr');
+		var trIndex = document.createElement('tr');
+
+		oriAbjadTable.innerHTML = '';
+		for (var i = 0; i < arrAbj.length; i++) {
+			var tdText = document.createElement('td');
+					tdText.innerHTML = arrAbj[i];
+			var tdIndex = document.createElement('td');
+					tdIndex.innerHTML = i;
+			trText.appendChild(tdText);
+			trIndex.appendChild(tdIndex);
+		}
+		tbodyAbjad.appendChild(trText);
+		tbodyAbjad.appendChild(trIndex);
+		oriAbjadTable.appendChild(tbodyAbjad);
+
+		// generate result
+		var resAbjadTable = document.getElementById('result-abjad');
+		var tbodyAbjadRes = document.createElement('tbody');
+		var trTextRes = document.createElement('tr');
+		var trIndexRes = document.createElement('tr');
+
+		resAbjadTable.innerHTML = '';
+		var resultAbjadArr = [];
+		for (var i = 0; i < arrAbj.length; i++) {
+			let idx = (i + parseInt(moveVal)) > 25 ? (i + parseInt(moveVal)) - 26 : (i + parseInt(moveVal));
+			
+			var tdTextRes = document.createElement('td');
+					tdTextRes.innerHTML = arrAbj[idx];
+			var tdIndexRes = document.createElement('td');
+					tdIndexRes.innerHTML = i;
+			trTextRes.appendChild(tdTextRes);
+			trIndexRes.appendChild(tdIndexRes);
+			
+			resultAbjadArr.push(arrAbj[idx]);
+		}		
+		tbodyAbjadRes.appendChild(trTextRes);
+		tbodyAbjadRes.appendChild(trIndexRes);
+		resAbjadTable.appendChild(tbodyAbjadRes);		
+
+		var chipertextResult = plaintext.replace(/\s/g,'').split('').map(a => {
+			var j = arrAbj.indexOf(a);
+			return resultAbjadArr[j];
+		});
+		document.getElementById('chipertext-result').innerHTML = chipertextResult.join('');
+	};
+	var kosongkan = function () {
+		document.getElementById('result').style.display = 'none';
+		document.getElementById('move-val').value = '';
+		document.getElementById('plaintext-val').value = '';
+	}
+</script>
+</html>
