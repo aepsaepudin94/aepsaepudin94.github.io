@@ -17,110 +17,193 @@
     	table td {
     		padding: 5px;
     	}
-			#result {
-				display: none;
-				overflow-x: auto;
-			}
+		#result-monoalfabet {
+			display: none;
+			overflow-x: auto;
+		}
+		.label-key {
+			display: block;
+		}
     </style>
   </head>
 <body>
 	<div class="container">
-		<div>
-			<label style="display: block" for="move-val">Geser:</label>
-			<input id="move-val" type="number">
+		<div style="margin-bottom: 10px;">
+			<label style="display: block" for="convert-type">Pilih Jenis Konversi:</label>
+			<select onchange="changeType()" name="" id="convert-type">
+				<option value="mono">Mono Alfabet</option>
+				<option value="poly">Poly Alfabet</option>
+				<option value="vigenere">Kode Vigenere</option>
+			</select>
 		</div>
 		<div>
 			<label style="display: block" for="plaintext-val">Plaintext:</label>
 			<input id="plaintext-val" type="text">
 		</div>
-		<div>
-			<button onclick="kosongkan()" style="margin-top: 5px">Reset</button>
-			<button onclick="createKotakAbjad()" id="generate" style="margin-top: 5px">Generate</button>
+		<div id="container-monoalfabet">
+			<h4 style="margin-bottom: 3px;">Mono Alfabet</h4>
+			<div class="form-monoalfabet">
+				<div>
+					<label style="display: block" for="move-val">Geser:</label>
+					<input id="move-val" type="number">
+				</div>
+				<div>
+					<button onclick="resetMonoAlfabet()" style="margin-top: 5px">Reset</button>
+					<button onclick="generateMonoAlfabet()" id="generate" style="margin-top: 5px">Generate</button>
+				</div>
+			</div>
+			<div style="border-top: 1px solid black; margin-top: 10px;" id="result-monoalfabet">
+				<div style="margin-top: 5px;">
+					<label style="display: block" for="original-abjad">Origin:</label>
+					<table id="original-abjad"></table>
+				</div>
+				<div style="margin-top: 5px;">
+					<label style="display: block" for="result-abjad">Result:</label>
+					<table id="result-abjad"></table>
+				</div>
+				<div style="margin-top: 5px;">
+					<table>
+						<tbody>
+							<tr id="plaintext-result-mono"></tr>
+							<tr id="chipertext-result-mono"></tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
 		</div>
-		<hr>
-		<div id="result">
-			<div style="margin-top: 5px;">
-				<label style="display: block" for="original-abjad">Origin:</label>
-				<table id="original-abjad"></table>
+		<div style="display: none" id="container-polyalfabet">
+			<h4 style="margin-bottom: 3px;">Poly Alfabet</h4>
+			<div class="form-polyalfabet">
+				<button onclick="addKey('keys-poly')" id="add-key-poly" title="Tambah Kunci">+ Tambah Kunci</button>
+				<div id="keys-poly" style="margin-top: 3px;">
+					<div class="key"><label class="label-key">Kunci 1:</label><input type="text"></div>
+				</div>
 			</div>
-			<div style="margin-top: 5px;">
-				<label style="display: block" for="result-abjad">Result:</label>
-				<table id="result-abjad"></table>
-			</div>
-			<div style="margin-top: 5px;">
-				<label for="result-abjad">Chipertext:</label>
-				<span id="chipertext-result"></span>
-			</div>
+		</div>
+		<div style="display: none" id="container-vigenere">
+			<h4 style="margin-bottom: 3px;">Kode Vigenere</h4>
 		</div>
 	</div>
-</body>
-<script type="text/javascript">
-	var createKotakAbjad = function () {
-		var moveVal = document.getElementById('move-val').value;
-		var plaintext = document.getElementById('plaintext-val').value.toUpperCase();
-		var isEmty = moveVal == '' || plaintext == '';
-
-		if (isEmty) {
-			alert('Tidak boleh kosong.');
-			return false;
-		} 
-
-		document.getElementById('result').style.display = 'block';
+	<script type="text/javascript">
 		var abjad = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-		var arrAbj = abjad.split('');
-		var oriAbjadTable = document.getElementById('original-abjad');
-		
-		var tbodyAbjad = document.createElement('tbody');
-		var trText = document.createElement('tr');
-		var trIndex = document.createElement('tr');
+		var arrAbjad = abjad.split('');
 
-		oriAbjadTable.innerHTML = '';
-		for (var i = 0; i < arrAbj.length; i++) {
-			var tdText = document.createElement('td');
-					tdText.innerHTML = arrAbj[i];
-			var tdIndex = document.createElement('td');
-					tdIndex.innerHTML = i;
-			trText.appendChild(tdText);
-			trIndex.appendChild(tdIndex);
+		var changeType = function () {
+			var typeConvert = document.getElementById('convert-type').value;
+			if (typeConvert == 'mono') {
+				document.getElementById('container-monoalfabet').style.display = 'block';
+				document.getElementById('container-polyalfabet').style.display = 'none';
+				document.getElementById('container-vigenere').style.display = 'none';
+			}
+			if (typeConvert == 'poly') {
+				document.getElementById('container-polyalfabet').style.display = 'block';
+				document.getElementById('container-monoalfabet').style.display = 'none';
+				document.getElementById('container-vigenere').style.display = 'none';			
+			}
+			if (typeConvert == 'vigenere') {
+				document.getElementById('container-vigenere').style.display = 'block';			
+				document.getElementById('container-polyalfabet').style.display = 'none';
+				document.getElementById('container-monoalfabet').style.display = 'none';
+			}
 		}
-		tbodyAbjad.appendChild(trText);
-		tbodyAbjad.appendChild(trIndex);
-		oriAbjadTable.appendChild(tbodyAbjad);
+		var generateTableOrigin = function () {
+			var oriAbjadTable = document.getElementById('original-abjad');
+			var tbodyAbjad = document.createElement('tbody');
+			var trText = document.createElement('tr');
+			var trIndex = document.createElement('tr');
 
-		// generate result
-		var resAbjadTable = document.getElementById('result-abjad');
-		var tbodyAbjadRes = document.createElement('tbody');
-		var trTextRes = document.createElement('tr');
-		var trIndexRes = document.createElement('tr');
+			oriAbjadTable.innerHTML = '';
+			for (var i = 0; i < arrAbjad.length; i++) {
+				var tdText = document.createElement('td');
+						tdText.innerHTML = arrAbjad[i];
+				var tdIndex = document.createElement('td');
+						tdIndex.innerHTML = i;
+				trText.appendChild(tdText);
+				trIndex.appendChild(tdIndex);
+			}
+			tbodyAbjad.appendChild(trText);
+			tbodyAbjad.appendChild(trIndex);
+			oriAbjadTable.appendChild(tbodyAbjad);			
+		};
+		var generateMonoAlfabet = function () {
+			var plaintext = document.getElementById('plaintext-val').value.toUpperCase();
+			var moveVal = document.getElementById('move-val').value;
+			var isEmty = moveVal == '' || plaintext == '';
 
-		resAbjadTable.innerHTML = '';
-		var resultAbjadArr = [];
-		for (var i = 0; i < arrAbj.length; i++) {
-			let idx = (i + parseInt(moveVal)) > 25 ? (i + parseInt(moveVal)) - 26 : (i + parseInt(moveVal));
+			if (isEmty) {
+				alert('Tidak boleh kosong.');
+				return false;
+			} 
+
+			document.getElementById('result-monoalfabet').style.display = 'block';
+			generateTableOrigin();
 			
-			var tdTextRes = document.createElement('td');
-					tdTextRes.innerHTML = arrAbj[idx];
-			var tdIndexRes = document.createElement('td');
-					tdIndexRes.innerHTML = i;
-			trTextRes.appendChild(tdTextRes);
-			trIndexRes.appendChild(tdIndexRes);
-			
-			resultAbjadArr.push(arrAbj[idx]);
-		}		
-		tbodyAbjadRes.appendChild(trTextRes);
-		tbodyAbjadRes.appendChild(trIndexRes);
-		resAbjadTable.appendChild(tbodyAbjadRes);		
+			var resAbjadTable = document.getElementById('result-abjad');
+			var tbodyAbjadRes = document.createElement('tbody');
+			var trTextRes = document.createElement('tr');
+			var trIndexRes = document.createElement('tr');
 
-		var chipertextResult = plaintext.replace(/\s/g,'').split('').map(a => {
-			var j = arrAbj.indexOf(a);
-			return resultAbjadArr[j];
-		});
-		document.getElementById('chipertext-result').innerHTML = chipertextResult.join('');
-	};
-	var kosongkan = function () {
-		document.getElementById('result').style.display = 'none';
-		document.getElementById('move-val').value = '';
-		document.getElementById('plaintext-val').value = '';
-	}
-</script>
+			resAbjadTable.innerHTML = '';
+			var resultAbjadArr = [];
+			for (var i = 0; i < arrAbjad.length; i++) {
+				let idx = (i + parseInt(moveVal)) > 25 ? (i + parseInt(moveVal)) - 26 : (i + parseInt(moveVal));
+				
+				var tdTextRes = document.createElement('td');
+						tdTextRes.innerHTML = arrAbjad[idx];
+				var tdIndexRes = document.createElement('td');
+						tdIndexRes.innerHTML = i;
+				trTextRes.appendChild(tdTextRes);
+				trIndexRes.appendChild(tdIndexRes);
+				
+				resultAbjadArr.push(arrAbjad[idx]);
+			}		
+			tbodyAbjadRes.appendChild(trTextRes);
+			tbodyAbjadRes.appendChild(trIndexRes);
+			resAbjadTable.appendChild(tbodyAbjadRes);		
+
+			var chipertextResultMono = plaintext.replace(/\s/g,'').split('').map(a => resultAbjadArr[arrAbjad.indexOf(a)]);
+			var chipertextResultMonoElem = document.getElementById('chipertext-result-mono');
+			var plaintextResultMonoElem = document.getElementById('plaintext-result-mono');
+			
+			var tdLabelChp = document.createElement('td');
+				tdLabelChp.innerHTML = 'Chipertext:';
+			var tdLabelPlt = document.createElement('td');
+				tdLabelPlt.innerHTML = 'Plaintext:';				
+
+			chipertextResultMonoElem.innerHTML = '';
+			chipertextResultMonoElem.appendChild(tdLabelChp);
+			plaintextResultMonoElem.innerHTML = '';
+			plaintextResultMonoElem.appendChild(tdLabelPlt);
+
+			chipertextResultMono.forEach(val => {
+				var td = document.createElement('td');
+					td.innerHTML = val;
+				chipertextResultMonoElem.appendChild(td);
+			});
+			plaintext.replace(/\s/g,'').split('').forEach(val => {
+				var td = document.createElement('td');
+					td.innerHTML = val;
+				plaintextResultMonoElem.appendChild(td);
+			});			
+		};
+		var resetMonoAlfabet = function () {
+			document.getElementById('result-monoalfabet').style.display = 'none';
+			document.getElementById('move-val').value = '';
+			document.getElementById('plaintext-val').value = '';
+		}
+		var addKey = function (target) {
+			var targetElem = document.getElementById(target);
+			var divKey = document.createElement('div');
+					divKey.className = 'key';
+			var newKeyLabel = document.createElement('label');
+					newKeyLabel.className = 'label-key';
+			var newKey = document.createElement('input');
+			var lenKey = document.querySelector('#keys-poly').childElementCount;
+					newKeyLabel.innerText = 'Kunci ' + (lenKey + 1)+ ':';
+			divKey.appendChild(newKeyLabel);
+			divKey.appendChild(newKey);
+			targetElem.appendChild(divKey);
+		}
+	</script>
+</body>
 </html>
