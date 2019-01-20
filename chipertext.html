@@ -227,8 +227,17 @@
 				newKey.setAttribute('type', 'text');
 			var lenKey = document.querySelector('#keys-poly').childElementCount;
 					newKeyLabel.innerText = 'Kunci ' + (lenKey + 1)+ ':';
+			var btnRemoveKey = document.createElement('button');
+				btnRemoveKey.title = 'Remove';
+				btnRemoveKey.innerHTML = 'x';
+				btnRemoveKey.style.marginLeft = '2px';
+				btnRemoveKey.onclick = function () {
+					document.getElementById('keys-poly').removeChild(divKey);
+				};
+
 			divKey.appendChild(newKeyLabel);
 			divKey.appendChild(newKey);
+			divKey.appendChild(btnRemoveKey);
 			targetElem.appendChild(divKey);
 		}
 		var generatePolyAlfabet = function () {
