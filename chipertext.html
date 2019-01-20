@@ -5,8 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Chipertext Generator | Aep Saepudin</title>
-    <!-- <link href="assets/css/bootstrap.min.css" rel="stylesheet"> -->
+    <title>Chipertext Generator</title>
     <style type="text/css">
 	    table {
 			border-collapse: collapse;	    	
@@ -17,12 +16,21 @@
     	table td {
     		padding: 5px;
     	}
-		#result-monoalfabet {
+		#result-monoalfabet,
+		#result-polyalfabet {
 			display: none;
 			overflow-x: auto;
+			margin-top: 10px;
+			border-top: 1px solid black;
 		}
 		.label-key {
 			display: block;
+		}
+		#keys-poly .key {
+			margin-top: 5px;
+		}
+		.key-table {
+			margin-top: 5px;
 		}
     </style>
   </head>
@@ -30,10 +38,10 @@
 	<div class="container">
 		<div style="margin-bottom: 10px;">
 			<label style="display: block" for="convert-type">Pilih Jenis Konversi:</label>
-			<select onchange="changeType()" name="" id="convert-type">
+			<select onchange="changeType()" id="convert-type">
 				<option value="mono">Mono Alfabet</option>
 				<option value="poly">Poly Alfabet</option>
-				<option value="vigenere">Kode Vigenere</option>
+				<!-- <option value="vigenere">Kode Vigenere</option> -->
 			</select>
 		</div>
 		<div>
@@ -49,13 +57,13 @@
 				</div>
 				<div>
 					<button onclick="resetMonoAlfabet()" style="margin-top: 5px">Reset</button>
-					<button onclick="generateMonoAlfabet()" id="generate" style="margin-top: 5px">Generate</button>
+					<button onclick="generateMonoAlfabet()" style="margin-top: 5px">Generate</button>
 				</div>
 			</div>
-			<div style="border-top: 1px solid black; margin-top: 10px;" id="result-monoalfabet">
+			<div id="result-monoalfabet">
 				<div style="margin-top: 5px;">
-					<label style="display: block" for="original-abjad">Origin:</label>
-					<table id="original-abjad"></table>
+					<label style="display: block">Origin:</label>
+					<table class="original-abjad"></table>
 				</div>
 				<div style="margin-top: 5px;">
 					<label style="display: block" for="result-abjad">Result:</label>
@@ -78,15 +86,31 @@
 				<div id="keys-poly" style="margin-top: 3px;">
 					<div class="key"><label class="label-key">Kunci 1:</label><input type="text"></div>
 				</div>
+				<div>
+					<button onclick="resetPoly()" style="margin-top: 5px">Reset</button>
+					<button onclick="generatePolyAlfabet()" style="margin-top: 5px">Generate</button>
+				</div>				
+			</div>
+			<div id="result-polyalfabet">
+				<div id="keys-table" style="margin-top: 5px;"></div>
+				<div style="margin-top: 5px;">
+					<table>
+						<tbody>
+							<tr id="plaintext-result-poly"></tr>
+							<tr id="chipertext-result-poly"></tr>
+						</tbody>
+					</table>
+				</div>								
 			</div>
 		</div>
-		<div style="display: none" id="container-vigenere">
+		<!-- <div style="display: none" id="container-vigenere">
 			<h4 style="margin-bottom: 3px;">Kode Vigenere</h4>
-		</div>
+		</div> -->
 	</div>
 	<script type="text/javascript">
 		var abjad = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		var arrAbjad = abjad.split('');
+		var regex = /^[a-zA-Z]*$/;
 
 		var changeType = function () {
 			var typeConvert = document.getElementById('convert-type').value;
@@ -106,8 +130,8 @@
 				document.getElementById('container-monoalfabet').style.display = 'none';
 			}
 		}
-		var generateTableOrigin = function () {
-			var oriAbjadTable = document.getElementById('original-abjad');
+		var generateTableOrigin = function (targetPrefix) {
+			var oriAbjadTable = document.querySelector('#' + targetPrefix +' .original-abjad');
 			var tbodyAbjad = document.createElement('tbody');
 			var trText = document.createElement('tr');
 			var trIndex = document.createElement('tr');
@@ -126,17 +150,19 @@
 			oriAbjadTable.appendChild(tbodyAbjad);			
 		};
 		var generateMonoAlfabet = function () {
-			var plaintext = document.getElementById('plaintext-val').value.toUpperCase();
+			var plaintext = document.getElementById('plaintext-val').value.replace(/\s/g,'').toUpperCase();
 			var moveVal = document.getElementById('move-val').value;
-			var isEmty = moveVal == '' || plaintext == '';
+			var isNotValid = !regex.test(plaintext);
+			var isEmpty = moveVal == '' || plaintext == '' || isNotValid;
+			var textAlert = isNotValid ? 'Hanya boleh huruf' : 'Tidak boleh kosong.';
 
-			if (isEmty) {
-				alert('Tidak boleh kosong.');
+			if (isEmpty) {
+				alert(textAlert);
 				return false;
 			} 
 
 			document.getElementById('result-monoalfabet').style.display = 'block';
-			generateTableOrigin();
+			generateTableOrigin('result-monoalfabet');
 			
 			var resAbjadTable = document.getElementById('result-abjad');
 			var tbodyAbjadRes = document.createElement('tbody');
@@ -198,11 +224,133 @@
 			var newKeyLabel = document.createElement('label');
 					newKeyLabel.className = 'label-key';
 			var newKey = document.createElement('input');
+				newKey.setAttribute('type', 'text');
 			var lenKey = document.querySelector('#keys-poly').childElementCount;
 					newKeyLabel.innerText = 'Kunci ' + (lenKey + 1)+ ':';
 			divKey.appendChild(newKeyLabel);
 			divKey.appendChild(newKey);
 			targetElem.appendChild(divKey);
+		}
+		var generatePolyAlfabet = function () {
+			var plaintext = document.getElementById('plaintext-val').value.replace(/\s/g,'').toUpperCase();
+			var isNotValid = !regex.test(plaintext);
+			var emptyKey = false;
+			var alertText = isNotValid ? 'Hanya boleh huruf' : 'Tidak boleh kosong';
+
+			document.querySelectorAll('#keys-poly .key').forEach((e) => {
+				var valKey = e.querySelector('input[type=text]').value;
+				if (valKey == '') { 
+					emptyKey = true;
+					return false; 
+				}
+				return true;
+			});
+
+			var isEmpty = plaintext == '' || isNotValid || emptyKey;
+			if (isEmpty) {
+				alert(alertText);
+				return false;
+			}
+
+			document.getElementById('result-polyalfabet').style.display = 'block';
+			
+			var keys = [];
+			var createKeyTable = function () {
+				var tableKeysTarget = document.getElementById('keys-table');
+				tableKeysTarget.innerHTML = '';
+				keys.forEach((key, idx) => {
+					var divKey = document.createElement('div');
+						divKey.className = 'key-table';
+					var labelKey = document.createElement('label');
+						labelKey.innerHTML = 'Kunci ' + (idx + 1);
+					var tableKey = document.createElement('table');
+					var tbodyKey = document.createElement('tbody');
+					var trAbjad = document.createElement('tr');
+					var trKey = document.createElement('tr');
+					
+					key.forEach((keyItem, itemIndex) => {
+						var tdAbjad = document.createElement('td');
+							tdAbjad.innerHTML = keyItem;
+						var tdKey = document.createElement('td');
+							tdKey.innerHTML = arrAbjad[itemIndex];
+						trAbjad.appendChild(tdAbjad);
+						trKey.appendChild(tdKey);
+					});
+					tbodyKey.appendChild(trKey);
+					tbodyKey.appendChild(trAbjad);
+					tableKey.appendChild(tbodyKey);
+
+					divKey.appendChild(labelKey);
+					divKey.appendChild(tableKey);
+					tableKeysTarget.appendChild(divKey);
+				});
+			}
+			var keysElem = document.querySelectorAll('#keys-poly .key');
+			keysElem.forEach(elem => {
+				var key = [];
+				var keyVal = elem.querySelector('input[type=text]').value.replace(/\s/g,'').toUpperCase().split('');
+				keyVal.forEach(val => {
+					var availableVal = key.indexOf(val) >= 0;
+					if (availableVal) { return }
+					key.push(val);					
+				});
+				arrAbjad.forEach(ab => {
+					var available = key.indexOf(ab) >= 0;
+					if (available) { return }
+					key.push(ab);
+				});
+				keys.push(key);
+			});
+			createKeyTable();
+			var chipertextResultPoly = plaintext.split('').map((a) => {
+				var idxAbjad = arrAbjad.indexOf(a);
+				var resultChar = '';
+				for (let i = 0; i < keys.length; i++) {
+					var key = keys[i];
+					var idx = idxAbjad;
+
+					if (i > 0) { idx = arrAbjad.indexOf(resultChar); }
+
+					var char = key[idx]; 
+					resultChar = char;
+				}
+				return resultChar;
+			});
+			
+			var chipertextResultPolyElem = document.getElementById('chipertext-result-poly');
+			var plaintextResultPolyElem = document.getElementById('plaintext-result-poly');
+			
+			var tdLabelChp = document.createElement('td');
+				tdLabelChp.innerHTML = 'Chipertext:';
+			var tdLabelPlt = document.createElement('td');
+				tdLabelPlt.innerHTML = 'Plaintext:';				
+
+			chipertextResultPolyElem.innerHTML = '';
+			chipertextResultPolyElem.appendChild(tdLabelChp);
+			plaintextResultPolyElem.innerHTML = '';
+			plaintextResultPolyElem.appendChild(tdLabelPlt);
+
+			chipertextResultPoly.forEach(val => {
+				var td = document.createElement('td');
+					td.innerHTML = val;
+				chipertextResultPolyElem.appendChild(td);
+			});
+			plaintext.replace(/\s/g,'').split('').forEach(val => {
+				var td = document.createElement('td');
+					td.innerHTML = val;
+				plaintextResultPolyElem.appendChild(td);
+			});	
+		};
+		var resetPoly = function () {
+			document.getElementById('result-polyalfabet').style.display = 'none';
+			document.getElementById('plaintext-val').value = '';
+			document.querySelectorAll('#keys-poly .key').forEach((keyElem, i) => {
+				if (i > 0) {
+					document.getElementById('keys-poly').removeChild(keyElem)
+				} else {
+					keyElem.querySelector('input[type=text]').value = '';
+				}
+			});			
 		}
 	</script>
 </body>
