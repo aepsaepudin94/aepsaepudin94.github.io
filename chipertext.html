@@ -212,9 +212,10 @@
 				generate: function () {
 					var _self = chipertextModule;
 					var plaintext = document.getElementById('plaintext-val').value.replace(/\s/g,'').toUpperCase();
-					var isNotValid = !regex.test(plaintext);
+					var isNotExpectText = !regex.test(plaintext);
 					var emptyKey = false;
-					var alertText = isNotValid ? 'Hanya boleh huruf' : 'Tidak boleh kosong';
+					var isNotValidKey = false;
+					var alertText = 'Tidak boleh kosong';
 
 					document.querySelectorAll('#keys-poly .key').forEach((e) => {
 						var valKey = e.querySelector('input[type=text]').value;
@@ -222,10 +223,20 @@
 							emptyKey = true;
 							return false; 
 						}
+						if (!regex.test(valKey)) {
+							isNotValidKey = true;
+							return false;
+						}
 						return true;
 					});
 
-					var isEmpty = plaintext == '' || isNotValid || emptyKey;
+					if (isNotExpectText) {
+						alertText = 'Hanya boleh huruf.'
+					} else if (isNotValidKey) {
+						alertText = 'Masukan kunci dengan huruf';
+					}
+
+					var isEmpty = plaintext == '' || isNotExpectText || emptyKey || isNotValidKey;
 					if (isEmpty) {
 						alert(alertText);
 						return false;
