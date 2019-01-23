@@ -108,7 +108,7 @@ var chipertextModule = {
 			var alertText = 'Tidak boleh kosong';
 
 			document.querySelectorAll('#keys-poly .key').forEach((e) => {
-				var valKey = e.querySelector('input[type=text]').value;
+				var valKey = e.querySelector('input[type=text]').value.replace(/\s/g,'');
 				if (valKey == '') {
 					emptyKey = true;
 					return false;
