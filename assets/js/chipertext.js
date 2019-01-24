@@ -290,14 +290,14 @@ var chipertextModule = {
 				lblKunci.innerHTML = 'Kunci:';
 			var lblIndex = document.createElement('td');
 				lblIndex.innerHTML = 'Index:';
-			var lblPengurangan = document.createElement('td');
-				lblPengurangan.innerHTML = 'Pengurangan:';
+			var lblIndexAkhir = document.createElement('td');
+				lblIndexAkhir.innerHTML = 'Index Akhir:';
 			var lblChipertext = document.createElement('td');
 				lblChipertext.innerHTML = 'Chipertext:';
 			trPlaintext.appendChild(lblPlain);
 			trKunci.appendChild(lblKunci);
 			trIndexAbjad.appendChild(lblIndex);
-			trReducResult.appendChild(lblPengurangan);
+			trReducResult.appendChild(lblIndexAkhir);
 			trChipertext.appendChild(lblChipertext);
 
 			var idx = 0;
