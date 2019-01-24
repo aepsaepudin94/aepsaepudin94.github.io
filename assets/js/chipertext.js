@@ -2,6 +2,26 @@ var regex = /^[a-zA-Z]*$/;
 var chipertextModule = {
 	abjad: () => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
 	init: (func, subFunc = 'generate') => { chipertextModule[func][subFunc]() },
+	createTableAbjad: function (containerTarget) {
+		var arrAbjad = chipertextModule.abjad();
+		var oriAbjadTable = document.querySelector('#'+ containerTarget +' .original-abjad');
+		var tbodyAbjad = document.createElement('tbody');
+		var trText = document.createElement('tr');
+		var trIndex = document.createElement('tr');
+
+		oriAbjadTable.innerHTML = '';
+		for (var i = 0; i < arrAbjad.length; i++) {
+			var tdText = document.createElement('td');
+					tdText.innerHTML = arrAbjad[i];
+			var tdIndex = document.createElement('td');
+					tdIndex.innerHTML = i;
+			trText.appendChild(tdText);
+			trIndex.appendChild(tdIndex);
+		}
+		tbodyAbjad.appendChild(trText);
+		tbodyAbjad.appendChild(trIndex);
+		oriAbjadTable.appendChild(tbodyAbjad);
+	},
 	monoAlfabet: {
 		generate: function () {
 			var _self = chipertextModule;
@@ -25,24 +45,8 @@ var chipertextModule = {
 
 			document.getElementById('result-monoalfabet').style.display = 'block';
 
-			var oriAbjadTable = document.querySelector('#result-monoalfabet .original-abjad');
-			var tbodyAbjad = document.createElement('tbody');
-			var trText = document.createElement('tr');
-			var trIndex = document.createElement('tr');
-
-			oriAbjadTable.innerHTML = '';
 			var arrAbjad = _self.abjad();
-			for (var i = 0; i < arrAbjad.length; i++) {
-				var tdText = document.createElement('td');
-						tdText.innerHTML = arrAbjad[i];
-				var tdIndex = document.createElement('td');
-						tdIndex.innerHTML = i;
-				trText.appendChild(tdText);
-				trIndex.appendChild(tdIndex);
-			}
-			tbodyAbjad.appendChild(trText);
-			tbodyAbjad.appendChild(trIndex);
-			oriAbjadTable.appendChild(tbodyAbjad);
+			_self.createTableAbjad('result-monoalfabet');
 
 			var resAbjadTable = document.getElementById('result-abjad');
 			var tbodyAbjadRes = document.createElement('tbody');
@@ -256,6 +260,83 @@ var chipertextModule = {
 			divKey.appendChild(btnRemoveKey);
 			targetElem.appendChild(divKey);
 		}
+	},
+	vigenereAngka: {
+		generate: function () {
+			var _self = chipertextModule;
+
+			var plaintext = document.getElementById('plaintext-val').value.replace(/\s/g,'').toUpperCase();
+			var kunciAngka = document.getElementById('kunci-vigAngka').value.split(',');
+			var resVigAngkaTable = document.getElementById('result-vigAngka-table');
+			var arrAbjad = _self.abjad();
+
+			document.getElementById('result-vigAngka').style.display = 'block';
+
+			_self.createTableAbjad('result-vigAngka');
+
+			document.getElementById('result-vigAngka-table').innerHTML = '';
+			var lenKunciAngka = kunciAngka.length;
+			var tbodyTable = document.createElement('tbody');
+			var trPlaintext = document.createElement('tr');
+			var trKunci = document.createElement('tr');
+			var trIndexAbjad = document.createElement('tr');
+				trIndexAbjad.style.borderBottom = '2px solid';
+			var trReducResult = document.createElement('tr');
+			var trChipertext = document.createElement('tr');
+
+			var lblPlain = document.createElement('td');
+				lblPlain.innerHTML = 'Plaintext:';
+			var lblKunci = document.createElement('td');
+				lblKunci.innerHTML = 'Kunci:';
+			var lblIndex = document.createElement('td');
+				lblIndex.innerHTML = 'Index:';
+			var lblPengurangan = document.createElement('td');
+				lblPengurangan.innerHTML = 'Pengurangan:';
+			var lblChipertext = document.createElement('td');
+				lblChipertext.innerHTML = 'Chipertext:';
+			trPlaintext.appendChild(lblPlain);
+			trKunci.appendChild(lblKunci);
+			trIndexAbjad.appendChild(lblIndex);
+			trReducResult.appendChild(lblPengurangan);
+			trChipertext.appendChild(lblChipertext);
+
+			var idx = 0;
+			plaintext.split('').forEach((text) => {
+				var tdText = document.createElement('td');
+					tdText.innerHTML = text;
+				var tdAngka = document.createElement('td');
+					if (idx > lenKunciAngka - 1) { idx = 0; }
+					tdAngka.innerHTML = kunciAngka[idx];
+				var tdIndexAbjad = document.createElement('td');
+					tdIndexAbjad.innerHTML = arrAbjad.indexOf(text);
+				var tdReducResult = document.createElement('td');
+				var reducResult = parseInt(kunciAngka[idx]) + parseInt(arrAbjad.indexOf(text));
+				var idxResult = reducResult > 25 ? reducResult - 26 : reducResult;
+					tdReducResult.innerHTML = idxResult;
+				var tdChipertext = document.createElement('td');
+					tdChipertext.innerHTML = arrAbjad[idxResult];
+
+				trPlaintext.appendChild(tdText);
+				trKunci.appendChild(tdAngka);
+				trIndexAbjad.appendChild(tdIndexAbjad);
+				trReducResult.appendChild(tdReducResult);
+				trChipertext.appendChild(tdChipertext);
+				idx++;
+			});
+
+			tbodyTable.appendChild(trPlaintext);
+			tbodyTable.appendChild(trKunci);
+			tbodyTable.appendChild(trIndexAbjad);
+			tbodyTable.appendChild(trReducResult);
+			tbodyTable.appendChild(trChipertext);
+			resVigAngkaTable.appendChild(tbodyTable);
+		},
+		reset: function () {
+			document.getElementById('result-vigAngka').style.display = 'none';
+			document.getElementById('plaintext-val').value = '';
+			document.getElementById('kunci-vigAngka').value = '';
+			document.getElementById('result-vigAngka-table').innerHTML = '';
+		}
 	}
 };
 
@@ -264,15 +345,15 @@ var changeType = function () {
 	if (typeConvert == 'mono') {
 		document.getElementById('container-monoalfabet').style.display = 'block';
 		document.getElementById('container-polyalfabet').style.display = 'none';
-		// document.getElementById('container-vigenere').style.display = 'none';
+		document.getElementById('container-vigAngka').style.display = 'none';
 	}
 	if (typeConvert == 'poly') {
 		document.getElementById('container-polyalfabet').style.display = 'block';
 		document.getElementById('container-monoalfabet').style.display = 'none';
-		// document.getElementById('container-vigenere').style.display = 'none';
+		document.getElementById('container-vigAngka').style.display = 'none';
 	}
-	if (typeConvert == 'vigenere') {
-		// document.getElementById('container-vigenere').style.display = 'block';
+	if (typeConvert == 'vigenere-angka') {
+		document.getElementById('container-vigAngka').style.display = 'block';
 		document.getElementById('container-polyalfabet').style.display = 'none';
 		document.getElementById('container-monoalfabet').style.display = 'none';
 	}

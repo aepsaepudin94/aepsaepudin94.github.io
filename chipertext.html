@@ -17,7 +17,8 @@
     		padding: 5px;
     	}
 		#result-monoalfabet,
-		#result-polyalfabet {
+		#result-polyalfabet,
+		#result-vigAngka {
 			display: none;
 			overflow-x: auto;
 			margin-top: 10px;
@@ -41,7 +42,7 @@
 			<select onchange="changeType()" id="convert-type">
 				<option value="mono">Mono Alfabet</option>
 				<option value="poly">Poly Alfabet</option>
-				<!-- <option value="vigenere">Kode Vigenere</option> -->
+				<option value="vigenere-angka">Vigenere Angka</option>
 			</select>
 		</div>
 		<div>
@@ -103,9 +104,29 @@
 				</div>
 			</div>
 		</div>
-		<!-- <div style="display: none" id="container-vigenere">
-			<h4 style="margin-bottom: 3px;">Kode Vigenere</h4>
-		</div> -->
+		<div style="display: none" id="container-vigAngka">
+			<h4 style="margin-bottom: 3px;">Vigenere Angka</h4>
+			<div class="form-vigAngka">
+				<div>
+					<label style="display: block" for="kunci-vigAngka">Kunci Angka:</label>
+					<input placeholder="Kunci, pisahkan dgn koma." id="kunci-vigAngka" type="text">
+				</div>
+				<div>
+					<button onclick="chipertextModule.init('vigenereAngka', 'reset')" style="margin-top: 5px">Reset</button>
+					<button onclick="chipertextModule.init('vigenereAngka')" style="margin-top: 5px">Generate</button>
+				</div>
+			</div>
+			<div id="result-vigAngka">
+				<div style="margin-top: 5px;">
+					<label style="display: block">Origin:</label>
+					<table class="original-abjad"></table>
+				</div>
+				<div style="margin-top: 5px;">
+					<label style="display: block" for="result-vigAngka-table">Result:</label>
+					<table id="result-vigAngka-table"></table>
+				</div>
+			</div>
+		</div>
 	</div>
 	<script src="assets/js/chipertext.js?m=1"></script>
 </body>
