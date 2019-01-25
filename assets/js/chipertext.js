@@ -273,18 +273,9 @@ var chipertextModule = {
 			var isEmpty = plaintext === '' || document.getElementById('kunci-vigAngka').value === '';
 			var alertText = 'Tidak boleh kosong.';
 
-			if (document.getElementById('kunci-vigAngka').value !== '') {
-				kunciAngka.forEach((key) => {
-					if (typeof key !== 'number') {
-						isNotValidKey = true;
-						return false;
-					}
-					return true;
-				});
-			}
+			kunciAngka = kunciAngka.map((key) => (parseInt(key)));
 
-			if (isEmpty || isNotValidKey) {
-				if (isNotValidKey) { alertText = 'Masukan kunci dengan format angka.'; }
+			if (isEmpty) {
 				alert(alertText);
 				return false;
 			}
