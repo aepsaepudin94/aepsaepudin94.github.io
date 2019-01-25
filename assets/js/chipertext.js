@@ -269,6 +269,26 @@ var chipertextModule = {
 			var kunciAngka = document.getElementById('kunci-vigAngka').value.split(',');
 			var resVigAngkaTable = document.getElementById('result-vigAngka-table');
 			var arrAbjad = _self.abjad();
+			var isNotValidKey = false;
+			var isEmpty = plaintext === '' || document.getElementById('kunci-vigAngka').value === '';
+			var alertText = 'Tidak boleh kosong.';
+			var regNum = new RegExp('^[0-9]$');
+
+			if (document.getElementById('kunci-vigAngka').value !== '') {
+				kunciAngka.forEach((key) => {
+					if (!regNum.test(key)) {
+						isNotValidKey = true;
+						return false;
+					}
+					return true;
+				});
+			}
+
+			if (isEmpty || isNotValidKey) {
+				if (isNotValidKey) { alertText = 'Masukan kunci dengan format angka.'; }
+				alert(alertText);
+				return false;
+			}
 
 			document.getElementById('result-vigAngka').style.display = 'block';
 
