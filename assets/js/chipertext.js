@@ -272,11 +272,10 @@ var chipertextModule = {
 			var isNotValidKey = false;
 			var isEmpty = plaintext === '' || document.getElementById('kunci-vigAngka').value === '';
 			var alertText = 'Tidak boleh kosong.';
-			var regNum = new RegExp('^[0-9]$');
 
 			if (document.getElementById('kunci-vigAngka').value !== '') {
 				kunciAngka.forEach((key) => {
-					if (!regNum.test(key)) {
+					if (typeof key !== 'number') {
 						isNotValidKey = true;
 						return false;
 					}
