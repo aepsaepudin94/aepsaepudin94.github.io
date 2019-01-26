@@ -18,7 +18,8 @@
     	}
 		#result-monoalfabet,
 		#result-polyalfabet,
-		#result-vigAngka {
+		#result-vigAngka,
+		#result-vigHuruf {
 			display: none;
 			overflow-x: auto;
 			margin-top: 10px;
@@ -33,6 +34,10 @@
 		.key-table {
 			margin-top: 5px;
 		}
+		.vericaltext-text {
+		    width:2px;
+		    word-wrap: break-word;
+		}
     </style>
   </head>
 <body>
@@ -43,6 +48,7 @@
 				<option value="mono">Mono Alfabet</option>
 				<option value="poly">Poly Alfabet</option>
 				<option value="vigenere-angka">Vigenere Angka</option>
+				<option value="vigenere-huruf">Vigenere Huruf</option>
 			</select>
 		</div>
 		<div>
@@ -124,6 +130,29 @@
 				<div style="margin-top: 5px;">
 					<label style="display: block" for="result-vigAngka-table">Result:</label>
 					<table id="result-vigAngka-table"></table>
+				</div>
+			</div>
+		</div>
+		<div style="display: none;" id="container-vigHuruf">
+			<h4 style="margin-bottom: 3px;">Vigenere Huruf</h4>
+			<div class="form-vigHuruf">
+				<div>
+					<label style="display: block" for="kunci-vigHuruf">Kunci Huruf:</label>
+					<input id="kunci-vigHuruf" type="text">
+				</div>
+				<div>
+					<button onclick="chipertextModule.init('vigenereHuruf', 'reset')" style="margin-top: 5px">Reset</button>
+					<button onclick="chipertextModule.init('vigenereHuruf')" style="margin-top: 5px">Generate</button>
+				</div>
+			</div>
+			<div id="result-vigHuruf">
+				<div style="margin-top: 5px;">
+					<label style="display: block">Tabel Pola:</label>
+					<table id="patern-table"></table>
+				</div>
+				<div style="margin-top: 5px;">
+					<label style="display: block" for="result-vigAngka-table">Result:</label>
+					<table id="result-vigHuruf-table"></table>
 				</div>
 			</div>
 		</div>

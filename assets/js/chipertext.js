@@ -359,6 +359,147 @@ var chipertextModule = {
 			document.getElementById('kunci-vigAngka').value = '';
 			document.getElementById('result-vigAngka-table').innerHTML = '';
 		}
+	},
+	vigenereHuruf: {
+		generate: function () {
+			var _self = chipertextModule;
+			var plaintext = document.getElementById('plaintext-val').value.replace(/\s/g,'').toUpperCase().split('');
+			var kunciHuruf = document.getElementById('kunci-vigHuruf').value.replace(/\s/g,'').toUpperCase().split('');
+			var resVigHurufTable = document.getElementById('result-vigHuruf-table');
+			var paternTable = document.getElementById('patern-table');
+			var arrAbjad = _self.abjad();
+			var isEmpty = plaintext === '' || document.getElementById('kunci-vigHuruf').value === '';
+			var isNotExpectText = !regex.test(plaintext.join(''));
+			var isNotExpectKey = !regex.test(kunciHuruf.join(''));
+			var alertText = 'Tidak boleh kosong.';
+
+			if (isNotExpectText || isNotExpectKey) {
+				alertText = 'Hanya boleh huruf.';
+			}
+
+			if (isEmpty || isNotExpectKey || isNotExpectText) {
+				alert(alertText);
+				return false;
+			}
+
+			document.getElementById('result-vigHuruf').style.display = 'block';
+
+			paternTable.innerHTML = '';
+			resVigHurufTable.innerHTML = '';
+
+			var trPlaintext = document.createElement('tr');
+			var lblPlaintext = document.createElement('td');
+				lblPlaintext.innerHTML = 'Plaintext:';
+			var trKunci = document.createElement('tr');
+			var lblKunci = document.createElement('td');
+				lblKunci.innerHTML = 'Kunci:';
+
+			trPlaintext.appendChild(lblPlaintext);
+			trKunci.appendChild(lblKunci);
+
+			var resultKunci = [];
+			var idxKunci = 0;
+			plaintext.forEach((text, i) => {
+				idxKunci = idxKunci > kunciHuruf.length - 1 ? 0 : idxKunci;
+				var td = document.createElement('td');
+					td.innerHTML = text;
+				var tdKunci = document.createElement('td');
+					tdKunci.innerHTML = kunciHuruf[idxKunci];
+					resultKunci.push(kunciHuruf[idxKunci]);
+
+				trPlaintext.appendChild(td);
+				trKunci.appendChild(tdKunci);
+				idxKunci++;
+			});
+
+			resVigHurufTable.appendChild(trPlaintext);
+			resVigHurufTable.appendChild(trKunci);
+
+			var arrPatern = [];
+			var arrElemTd = [];
+			arrAbjad.forEach((abjadRow, row) => {
+				var tr = document.createElement('tr');
+				var loopLimit = 26 + row;
+				var arrRow = [];
+				var arrRowElem = [];
+
+				if (row === 0) {
+					var trLabelColSpan = document.createElement('tr');
+					var tdColspan = document.createElement('td');
+						tdColspan.innerHTML = 'Plaintext';
+						tdColspan.setAttribute('colspan', 28);
+						tdColspan.style.textAlign = 'center';
+					var firstTr = document.createElement('tr');
+					var blankTd = document.createElement('td');
+						blankTd.innerHTML = '';
+					var tdLabelRowSpan = document.createElement('td');
+						tdLabelRowSpan.innerHTML = 'Kode Kunci';
+						tdLabelRowSpan.setAttribute('rowspan', 27);
+						tdLabelRowSpan.style.transform = 'rotate(-90deg)';
+						tdLabelRowSpan.style.width = '2px';
+					trLabelColSpan.style.background = '#e2e3e4';
+					trLabelColSpan.appendChild(tdColspan);
+					firstTr.appendChild(tdLabelRowSpan);
+					firstTr.appendChild(blankTd);
+					firstTr.style.background = '#e2e3e4';
+
+					for (var i = 0; i < 26; i++) {
+						var tdFirstRow = document.createElement('td');
+							tdFirstRow.innerHTML = arrAbjad[i].toLowerCase();
+						firstTr.appendChild(tdFirstRow);
+					}
+					paternTable.appendChild(trLabelColSpan);
+					paternTable.appendChild(firstTr);
+				}
+
+				for (var i = row; i < loopLimit; i++) {
+					var idxCol = i > 25 ? i - 26 : i;
+					var abjadCol = arrAbjad[idxCol];
+					var td = document.createElement('td');
+						td.innerHTML = abjadCol;
+
+					if (i === row) {
+						var firstTd = document.createElement('td');
+							firstTd.innerHTML = abjadCol.toLowerCase();
+							firstTd.style.background = '#e2e3e4';
+						tr.appendChild(firstTd);
+					}
+
+					tr.appendChild(td);
+					arrRow.push(abjadCol);
+					arrRowElem.push(td);
+				}
+				paternTable.appendChild(tr);
+				arrPatern.push(arrRow);
+				arrElemTd.push(arrRowElem);
+			});
+
+			var trChipertext = document.createElement('tr');
+			var tdChipertext = document.createElement('td');
+				tdChipertext.innerHTML = 'Chipertext:';
+			trChipertext.appendChild(tdChipertext);
+
+			var resultChiptertext = plaintext.map((plText, idxText) => {
+				var kcText = resultKunci[idxText];
+				var idxPlainOnAbjad = arrAbjad.indexOf(plText);
+				var idxKunciOnAbjad = arrAbjad.indexOf(kcText);
+				var resultChar = arrPatern[idxKunciOnAbjad][idxPlainOnAbjad];
+				var targetTd = arrElemTd[idxKunciOnAbjad][idxPlainOnAbjad];
+				var tdChipertext = document.createElement('td');
+					tdChipertext.innerHTML = resultChar;
+				trChipertext.appendChild(tdChipertext);
+				targetTd.style.background = 'black';
+				targetTd.style.color = 'white';
+				return resultChar;
+			});
+			resVigHurufTable.appendChild(trChipertext);
+		},
+		reset: function () {
+			document.getElementById('result-vigHuruf').style.display = 'none';
+			document.getElementById('plaintext-val').value = '';
+			document.getElementById('kunci-vigHuruf').value = '';
+			document.getElementById('result-vigHuruf-table').innerHTML = '';
+		}
 	}
 };
 
@@ -368,14 +509,23 @@ var changeType = function () {
 		document.getElementById('container-monoalfabet').style.display = 'block';
 		document.getElementById('container-polyalfabet').style.display = 'none';
 		document.getElementById('container-vigAngka').style.display = 'none';
+		document.getElementById('container-vigHuruf').style.display = 'none';
 	}
 	if (typeConvert == 'poly') {
 		document.getElementById('container-polyalfabet').style.display = 'block';
 		document.getElementById('container-monoalfabet').style.display = 'none';
 		document.getElementById('container-vigAngka').style.display = 'none';
+		document.getElementById('container-vigHuruf').style.display = 'none';
 	}
 	if (typeConvert == 'vigenere-angka') {
 		document.getElementById('container-vigAngka').style.display = 'block';
+		document.getElementById('container-polyalfabet').style.display = 'none';
+		document.getElementById('container-monoalfabet').style.display = 'none';
+		document.getElementById('container-vigHuruf').style.display = 'none';
+	}
+	if (typeConvert == 'vigenere-huruf') {
+		document.getElementById('container-vigHuruf').style.display = 'block';
+		document.getElementById('container-vigAngka').style.display = 'none';
 		document.getElementById('container-polyalfabet').style.display = 'none';
 		document.getElementById('container-monoalfabet').style.display = 'none';
 	}
