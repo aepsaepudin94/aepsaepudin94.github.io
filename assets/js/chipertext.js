@@ -270,12 +270,24 @@ var chipertextModule = {
 			var resVigAngkaTable = document.getElementById('result-vigAngka-table');
 			var arrAbjad = _self.abjad();
 			var isNotValidKey = false;
+			var keyIsmore26 = false;
 			var isEmpty = plaintext === '' || document.getElementById('kunci-vigAngka').value === '';
 			var alertText = 'Tidak boleh kosong.';
 
-			kunciAngka = kunciAngka.map((key) => (parseInt(key)));
 
-			if (isEmpty) {
+			kunciAngka = kunciAngka.map((key) => {
+				key = parseInt(key);
+
+				if (key > 26) { keyIsmore26 = true; }
+
+				return key;
+			});
+
+			if (keyIsmore26) {
+				alertText = 'Masukan angka kunci maksimal 26';
+			}
+
+			if (isEmpty || keyIsmore26) {
 				alert(alertText);
 				return false;
 			}
