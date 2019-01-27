@@ -601,7 +601,7 @@ var chipertextModule = {
 			document.getElementById('result-zigzag').style.display = 'none';
 			document.getElementById('plaintext-val').value = '';
 			document.getElementById('length-zigzag').value = '';
-			document.getElementById('result-zigzag-table').innerHTML = '';
+			document.getElementById('chipertext-result-zigzag').innerHTML = '';
 		}
 	}
 };
