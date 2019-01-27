@@ -51,6 +51,7 @@
 				<option value="vigenere-angka">Vigenere Angka</option>
 				<option value="vigenere-huruf">Vigenere Huruf</option>
 				<option value="permutasi-zigzag">Permutasi Zig-zag</option>
+				<option value="permutasi-segitiga">Permutasi Segitiga</option>
 			</select>
 		</div>
 		<div>
@@ -182,6 +183,25 @@
 							<tr id="chipertext-result-zigzag"></tr>
 						</tbody>
 					</table>
+				</div>
+			</div>
+		</div>
+		<div style="display: none;" id="container-segitiga">
+			<h4 style="margin-bottom: 3px;">Permutasi Segitiga</h4>
+			<div class="form-segitiga">
+				<div>
+					<button onclick="chipertextModule.init('segitiga', 'reset')" style="margin-top: 5px">Reset</button>
+					<button onclick="chipertextModule.init('segitiga')" style="margin-top: 5px">Generate</button>
+				</div>
+			</div>
+			<div style="display: none;" id="result-segitiga">
+				<div style="margin-top: 5px;">
+					<label style="display: block">Tabel Segitiga:</label>
+					<table id="segitiga-table"></table>
+				</div>
+				<div style="margin-top: 5px;">
+					<label for="result-segitiga-chipertext">Chipertext:</label>
+					<span style="font-weight: bold;" id="result-segitiga-chipertext"></span>
 				</div>
 			</div>
 		</div>

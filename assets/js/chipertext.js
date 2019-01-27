@@ -503,11 +503,9 @@ var chipertextModule = {
 	},
 	zigzag: {
 		generate: function () {
-			var _self = chipertextModule;
 			var plaintext = document.getElementById('plaintext-val').value.replace(/\s/g,'').toUpperCase().split('');
 			var lenZigzag = document.getElementById('length-zigzag').value;
 			var zigzagTable = document.getElementById('zigzag-table');
-			var arrAbjad = _self.abjad();
 			var alertText = 'Tidak boleh kosong';
 			var isEmpty = lenZigzag === '' || plaintext.join('') === '';
 			var isNotExpectText = !regex.test(plaintext.join(''));
@@ -603,6 +601,107 @@ var chipertextModule = {
 			document.getElementById('length-zigzag').value = '';
 			document.getElementById('chipertext-result-zigzag').innerHTML = '';
 		}
+	},
+	segitiga: {
+		generate: function () {
+			var plaintext = document.getElementById('plaintext-val').value.replace(/\s/g,'').toUpperCase().split('');
+			var isEmpty = plaintext.join('') === '';
+			var isNotExpectText = !regex.test(plaintext.join(''));
+			var alertText = 'Tidak boleh kosong.';
+
+			if (isEmpty || isNotExpectText) {
+				alertText = isNotExpectText ? 'Hanya boleh huruf.' : alertText;
+				alert(alertText);
+				return false;
+			}
+
+			document.getElementById('result-segitiga').style.display = 'block';
+
+			var plaintextProcess = _.clone(plaintext);
+			var lenPop = 1;
+			var arrSegitiga = [];
+
+			while(plaintextProcess.length) {
+				var arrRow = [];
+				for (var i = 0; i < lenPop; i++) {
+					var pushValue = plaintextProcess.shift() || 'X';
+					arrRow.push(pushValue);
+				}
+				arrSegitiga.push(arrRow);
+				lenPop += 2;
+			}
+
+			var getMedianIdxLongestArray = (key) => {
+				var longest = 0;
+				arrSegitiga.forEach((row) => {
+				  if (longest < row.length) {
+				  	longest = row.length;
+				  }
+				});
+
+				var obj = {
+					median: Math.floor(longest/2),
+					longest: longest
+				};
+
+				return obj[key];
+			};
+			var prettifyArr = (arr) => {
+				var medianDt = getMedianIdxLongestArray('median');
+				var longestDt = getMedianIdxLongestArray('longest');
+				for (var i = 0; i < arr.length; i++) {
+					var row = arr[i];
+					var lenUnshift = medianDt - i;
+
+					for (var j = 0; j < lenUnshift; j++) {
+						row.unshift(0);
+					}
+
+					while(row.length < longestDt) {
+						row.push(0);
+					}
+				}
+
+				return arr;
+			};
+			var getChipertext = (arr) => {
+				var idxCheck = 0;
+				var longest = getMedianIdxLongestArray('longest');
+				var chpText = '';
+
+				for (var i = 0; i < longest; i++) {
+					for (var j = 0; j < arr.length; j++) {
+						var char = arr[j][i];
+						if (typeof char !== 'number') {
+							chpText += char;
+						}
+					}
+				}
+				return chpText;
+			};
+
+			prettifyArr(arrSegitiga);
+
+			var chipertext = getChipertext(arrSegitiga);
+
+			$('#segitiga-table').empty();
+			for (var i = 0; i < arrSegitiga.length; i++) {
+				var r = arrSegitiga[i];
+				var tr = document.createElement('tr');
+
+				for (var j = 0; j < r.length; j++) {
+					var dt = typeof r[j] === 'number' ? '' : r[j];
+					$(tr).append(`<td>${dt}</td>`);
+				}
+				$('#segitiga-table').append(tr);
+			}
+			$('#result-segitiga-chipertext').text(chipertext);
+		},
+		reset: function () {
+			document.getElementById('result-segitiga').style.display = 'none';
+			document.getElementById('plaintext-val').value = '';
+			document.getElementById('result-segitiga-chipertext').innerHTML = '';
+		}
 	}
 };
 
@@ -614,6 +713,7 @@ var changeType = function () {
 	document.getElementById('container-vigAngka').style.display = 'none';
 	document.getElementById('container-vigHuruf').style.display = 'none';
 	document.getElementById('container-zigzag').style.display = 'none';
+	document.getElementById('container-segitiga').style.display = 'none';
 
 	if (typeConvert == 'mono') {
 		document.getElementById('container-monoalfabet').style.display = 'block';
@@ -629,5 +729,8 @@ var changeType = function () {
 	}
 	if (typeConvert == 'permutasi-zigzag') {
 		document.getElementById('container-zigzag').style.display = 'block';
+	}
+	if (typeConvert == 'permutasi-segitiga') {
+		document.getElementById('container-segitiga').style.display = 'block';
 	}
 }
