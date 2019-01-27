@@ -19,7 +19,8 @@
 		#result-monoalfabet,
 		#result-polyalfabet,
 		#result-vigAngka,
-		#result-vigHuruf {
+		#result-vigHuruf,
+		#result-zigzag {
 			display: none;
 			overflow-x: auto;
 			margin-top: 10px;
@@ -49,6 +50,7 @@
 				<option value="poly">Poly Alfabet</option>
 				<option value="vigenere-angka">Vigenere Angka</option>
 				<option value="vigenere-huruf">Vigenere Huruf</option>
+				<option value="permutasi-zigzag">Permutasi Zig-zag</option>
 			</select>
 		</div>
 		<div>
@@ -151,12 +153,41 @@
 					<table id="patern-table"></table>
 				</div>
 				<div style="margin-top: 5px;">
-					<label style="display: block" for="result-vigAngka-table">Result:</label>
+					<label style="display: block" for="result-vigHuruf-table">Result:</label>
 					<table id="result-vigHuruf-table"></table>
 				</div>
 			</div>
 		</div>
+		<div style="display: none;" id="container-zigzag">
+			<h4 style="margin-bottom: 3px;">Permutasi Zig-zag</h4>
+			<div class="form-zigzag">
+				<div>
+					<label style="display: block" for="length-zigzag">Jumlah Baris Zig-zag:</label>
+					<input id="length-zigzag" type="number">
+				</div>
+				<div>
+					<button onclick="chipertextModule.init('zigzag', 'reset')" style="margin-top: 5px">Reset</button>
+					<button onclick="chipertextModule.init('zigzag')" style="margin-top: 5px">Generate</button>
+				</div>
+			</div>
+			<div style="display: none;" id="result-zigzag">
+				<div style="margin-top: 5px;">
+					<label style="display: block">Tabel Zig-zag:</label>
+					<table id="zigzag-table"></table>
+				</div>
+				<div style="margin-top: 5px;">
+					<label style="display: block" for="result-zigzag-table">Result:</label>
+					<table>
+						<tbody>
+							<tr id="chipertext-result-zigzag"></tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
 	</div>
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/lodash.js"></script>
 	<script src="assets/js/chipertext.js?m=2"></script>
 </body>
 </html>

@@ -500,33 +500,134 @@ var chipertextModule = {
 			document.getElementById('kunci-vigHuruf').value = '';
 			document.getElementById('result-vigHuruf-table').innerHTML = '';
 		}
+	},
+	zigzag: {
+		generate: function () {
+			var _self = chipertextModule;
+			var plaintext = document.getElementById('plaintext-val').value.replace(/\s/g,'').toUpperCase().split('');
+			var lenZigzag = document.getElementById('length-zigzag').value;
+			var zigzagTable = document.getElementById('zigzag-table');
+			var arrAbjad = _self.abjad();
+			var alertText = 'Tidak boleh kosong';
+			var isEmpty = lenZigzag === '' || plaintext.join('') === '';
+			var isNotExpectText = !regex.test(plaintext.join(''));
+			var isNotExpectZigzagVal = lenZigzag < 2;
+
+			if (isNotExpectZigzagVal) {
+				alertText = 'Masukan panjang zig-zag minimal 2.';
+			}
+
+			if (isNotExpectText) {
+				alertText = 'Masukan plaintext dengan format huruf.';
+			}
+
+			if (isEmpty || isNotExpectText || isNotExpectZigzagVal) {
+				alert(alertText);
+				return false;
+			}
+
+			document.getElementById('result-zigzag').style.display = 'block';
+
+			var arrZigzag = [];
+			for (var i = 0; i < lenZigzag; i++) {
+				var r = plaintext.map(text => 5);
+				arrZigzag.push(r);
+			}
+
+			var countZigzag = 1;
+			var lastGrepIdx = lenZigzag - 1;
+			var lastIdxPlText = -1;
+			var lastRow = 0;
+			var plaintextProcess = _.clone(plaintext);
+			while (plaintextProcess.length) {
+				var isMenurun = countZigzag % 2 === 0;
+				for (var i = 0; i < lenZigzag; i++) {
+
+					if (i > 0) {
+						if (isMenurun) {
+							lastGrepIdx++;
+						} else {
+							lastGrepIdx--;
+						}
+					}
+
+					if (i > 0 || lastIdxPlText < 0) {
+						lastIdxPlText++;
+						plaintextProcess.pop();
+					}
+
+					arrZigzag[lastGrepIdx][lastIdxPlText] = plaintext[lastIdxPlText] || 'X';
+				}
+				countZigzag++;
+			}
+
+			var arrRowTerpanjang = 0;
+			arrZigzag.forEach((row) => {
+			  var len = row.length;
+			  if (len > arrRowTerpanjang) {
+			  	arrRowTerpanjang = len;
+			  }
+			});
+
+			arrZigzag.forEach((row) => {
+				while(row.length < arrRowTerpanjang) {
+					row.push(5);
+				}
+			});
+
+			zigzagTable.innerHTML = '';
+			for (var i = 0; i < arrZigzag.length; i++) {
+				var row = arrZigzag[i];
+				var tr = document.createElement('tr');
+
+				for (var j = 0; j < row.length; j++) {
+					var td = document.createElement('td');
+						td.innerHTML = typeof row[j] === 'number' || !row[j] ? '' : row[j];
+					tr.appendChild(td);
+				}
+				zigzagTable.appendChild(tr);
+			}
+
+		  	$('#chipertext-result-zigzag').empty().append('<td>Chipertext:</td>');
+			arrZigzag.forEach((row) => {
+				row.forEach((dt) => {
+					if (typeof dt !== 'number' || !dt) {
+					  	$('#chipertext-result-zigzag').append(`<td>${dt}</td>`);
+					}
+				});
+			});
+		},
+		reset: function () {
+			document.getElementById('result-zigzag').style.display = 'none';
+			document.getElementById('plaintext-val').value = '';
+			document.getElementById('length-zigzag').value = '';
+			document.getElementById('result-zigzag-table').innerHTML = '';
+		}
 	}
 };
 
 var changeType = function () {
 	var typeConvert = document.getElementById('convert-type').value;
+
+	document.getElementById('container-monoalfabet').style.display = 'none';
+	document.getElementById('container-polyalfabet').style.display = 'none';
+	document.getElementById('container-vigAngka').style.display = 'none';
+	document.getElementById('container-vigHuruf').style.display = 'none';
+	document.getElementById('container-zigzag').style.display = 'none';
+
 	if (typeConvert == 'mono') {
 		document.getElementById('container-monoalfabet').style.display = 'block';
-		document.getElementById('container-polyalfabet').style.display = 'none';
-		document.getElementById('container-vigAngka').style.display = 'none';
-		document.getElementById('container-vigHuruf').style.display = 'none';
 	}
 	if (typeConvert == 'poly') {
 		document.getElementById('container-polyalfabet').style.display = 'block';
-		document.getElementById('container-monoalfabet').style.display = 'none';
-		document.getElementById('container-vigAngka').style.display = 'none';
-		document.getElementById('container-vigHuruf').style.display = 'none';
 	}
 	if (typeConvert == 'vigenere-angka') {
 		document.getElementById('container-vigAngka').style.display = 'block';
-		document.getElementById('container-polyalfabet').style.display = 'none';
-		document.getElementById('container-monoalfabet').style.display = 'none';
-		document.getElementById('container-vigHuruf').style.display = 'none';
 	}
 	if (typeConvert == 'vigenere-huruf') {
 		document.getElementById('container-vigHuruf').style.display = 'block';
-		document.getElementById('container-vigAngka').style.display = 'none';
-		document.getElementById('container-polyalfabet').style.display = 'none';
-		document.getElementById('container-monoalfabet').style.display = 'none';
+	}
+	if (typeConvert == 'permutasi-zigzag') {
+		document.getElementById('container-zigzag').style.display = 'block';
 	}
 }
