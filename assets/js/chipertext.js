@@ -586,20 +586,21 @@ var chipertextModule = {
 				zigzagTable.appendChild(tr);
 			}
 
-		  	$('#chipertext-result-zigzag').empty().append('<td>Chipertext:</td>');
+		  	var chipertext = '';
 			arrZigzag.forEach((row) => {
 				row.forEach((dt) => {
 					if (typeof dt !== 'number' || !dt) {
-					  	$('#chipertext-result-zigzag').append(`<td>${dt}</td>`);
+						chipertext += dt;
 					}
 				});
 			});
+			$('#result-zigzag-chipertext').text(chipertext);
 		},
 		reset: function () {
 			document.getElementById('result-zigzag').style.display = 'none';
 			document.getElementById('plaintext-val').value = '';
 			document.getElementById('length-zigzag').value = '';
-			document.getElementById('chipertext-result-zigzag').innerHTML = '';
+			document.getElementById('result-zigzag-chipertext').innerHTML = '';
 		}
 	},
 	segitiga: {
