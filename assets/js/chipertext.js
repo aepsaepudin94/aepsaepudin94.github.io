@@ -608,10 +608,12 @@ var chipertextModule = {
 			var plaintext = document.getElementById('plaintext-val').value.replace(/\s/g,'').toUpperCase().split('');
 			var isEmpty = plaintext.join('') === '';
 			var isNotExpectText = !regex.test(plaintext.join(''));
+			var isLessThan2Char = plaintext.length < 2;
 			var alertText = 'Tidak boleh kosong.';
 
-			if (isEmpty || isNotExpectText) {
-				alertText = isNotExpectText ? 'Hanya boleh huruf.' : alertText;
+			if (isEmpty || isNotExpectText || isLessThan2Char) {
+				alertText = isNotExpectText ? 'Hanya boleh huruf.' :
+					(isLessThan2Char ? 'Plaintext minimum 2 karakter.' : alertText);
 				alert(alertText);
 				return false;
 			}
