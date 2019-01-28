@@ -621,17 +621,17 @@ var chipertextModule = {
 			document.getElementById('result-segitiga').style.display = 'block';
 
 			var plaintextProcess = _.clone(plaintext);
-			var lenPop = 1;
+			var lenShift = 1;
 			var arrSegitiga = [];
 
 			while(plaintextProcess.length) {
 				var arrRow = [];
-				for (var i = 0; i < lenPop; i++) {
+				for (var i = 0; i < lenShift; i++) {
 					var pushValue = plaintextProcess.shift() || 'X';
 					arrRow.push(pushValue);
 				}
 				arrSegitiga.push(arrRow);
-				lenPop += 2;
+				lenShift += 2;
 			}
 
 			var getMedianIdxLongestArray = (key) => {
