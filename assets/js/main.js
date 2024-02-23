@@ -129,6 +129,13 @@ const utils = {
         .addClass('disabled')
         .text('Loading');
 
+      const resetForm = () => {
+        $('#name').val('');
+        $('#email').val('');
+        $('#phone').val('');
+        $('#message').val('');
+      };
+
       $.ajax({
         url: apiUrl,
         method: 'POST',
@@ -136,6 +143,7 @@ const utils = {
         success: function (response) {
           const status = response.data;
           if (status) {
+            resetForm();
             alert('Thank you for your message!');
           } else {
             alert('Failed to send message!');
