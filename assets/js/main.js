@@ -134,7 +134,7 @@ const utils = {
         method: 'POST',
         data: postData,
         success: function (response) {
-          const status = response.data.status;
+          const status = response.data;
           if (status) {
             alert('Thank you for your message!');
           } else {
@@ -145,6 +145,12 @@ const utils = {
             .removeClass('disabled')
             .text('Submit');   
         },
+        error: function (xhr, status, error) {
+          alert('Error: ' + error);
+          $('.btn-submit')
+            .removeClass('disabled')
+            .text('Submit');
+        }        
       });      
     });
   }
