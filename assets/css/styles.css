@@ -296,6 +296,13 @@ input[type="text"]:focus ~ .form-control {
   cursor: pointer;
 }
 
+.btn-submit.disabled {
+  background-color: #f4f4f4;
+  border: 2px solid #f4f4f4;
+  color: #777;
+  cursor: not-allowed;
+}
+
 .box-profile-body {
   padding: 10px;
 }
@@ -330,4 +337,13 @@ footer {
 .footer-area a {
   text-decoration: none;
   color: #fff;
+}
+
+.form-control.error > input,
+.form-control.error > textarea {
+	border-bottom: 1px solid red;
+}
+
+.form-control.error > label {
+	color: red;
 }

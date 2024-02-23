@@ -80,6 +80,73 @@ const utils = {
         navContainer.classList.add('nav-mobile');
       }
     });
+
+    $('.form-control input, .form-control textarea').on('focus', function() {
+      $(this).parent().removeClass('error');
+    });
+
+    const submitBtn = document.querySelector('.btn-submit');
+    submitBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const name = document.querySelector('#name').value;
+      const email = document.querySelector('#email').value;
+      const phone = document.querySelector('#phone').value;
+      const message = document.querySelector('#message').value;
+
+      let isValid = true;
+
+      if (!name) {
+        $('#name').parent().addClass('error');
+        isValid = false;
+      }
+
+      if (!email) {
+        $('#email').parent().addClass('error');
+        isValid = false;
+      }
+
+      if (!message) {
+        $('#message').parent().addClass('error');
+        isValid = false;
+      }
+
+      if (!isValid) return;
+
+      const postData = {
+        name    : $.trim(name),
+        email   : $.trim(email),
+        phone   : $.trim(phone),
+        message : $.trim(message)
+      };
+
+      const apiUrl = 'https://cakrawala-berlianbuana.com/index.php/api_messages/insert_special_message';
+
+      if ($('.btn-submit').hasClass('disabled')) {
+        return;
+      }
+
+      $('.btn-submit')
+        .addClass('disabled')
+        .text('Loading');
+
+      $.ajax({
+        url: apiUrl,
+        method: 'POST',
+        data: postData,
+        success: function (response) {
+          const status = response.data.status;
+          if (status) {
+            alert('Thank you for your message!');
+          } else {
+            alert('Failed to send message!');
+          }
+
+          $('.btn-submit')
+            .removeClass('disabled')
+            .text('Submit');   
+        },
+      });      
+    });
   }
 };
 
