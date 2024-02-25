@@ -85,38 +85,53 @@ const utils = {
       $(this).parent().removeClass('error');
     });
 
-    const submitBtn = document.querySelector('.btn-submit');
-    submitBtn.addEventListener('click', (e) => {
-      e.preventDefault();
+    const getDataForm = (e) => {
+      const data = {};
       const name = document.querySelector('#name').value;
       const email = document.querySelector('#email').value;
       const phone = document.querySelector('#phone').value;
       const message = document.querySelector('#message').value;
+      
+      data.name = name;
+      data.email = email;
+      data.phone = phone;
+      data.message = message;
+
+      return data;
+    };
+    const validateForm = (e) => {
+      e.preventDefault();
+      const dataFromForm = getDataForm();
 
       let isValid = true;
 
-      if (!name) {
+      if (!dataFromForm.name) {
         $('#name').parent().addClass('error');
         isValid = false;
       }
 
-      if (!email) {
+      if (!dataFromForm.email) {
         $('#email').parent().addClass('error');
         isValid = false;
       }
 
-      if (!message) {
+      if (!dataFromForm.message) {
         $('#message').parent().addClass('error');
         isValid = false;
       }
 
       if (!isValid) return;
+      grecaptcha.execute();
+    };
+    const sendMessage = () => {
+      const dataForm = getDataForm();
 
       const postData = {
-        name    : $.trim(name),
-        email   : $.trim(email),
-        phone   : $.trim(phone),
-        message : $.trim(message)
+        name    : $.trim(dataForm.name),
+        email   : $.trim(dataForm.email),
+        phone   : $.trim(dataForm.phone),
+        message : $.trim(dataForm.message),
+        g_recaptcha_token: grecaptcha.getResponse()
       };
 
       const apiUrl = 'https://cakrawala-berlianbuana.com/index.php/api_messages/insert_special_message';
@@ -134,6 +149,7 @@ const utils = {
         $('#email').val('');
         $('#phone').val('');
         $('#message').val('');
+        grecaptcha.reset();
       };
 
       $.ajax({
@@ -159,7 +175,17 @@ const utils = {
             .removeClass('disabled')
             .text('Submit');
         }        
-      });      
+      });          
+    };
+
+    grecaptcha.ready(() => {
+      const submitBtn = document.querySelector('.btn-submit');
+      grecaptcha.render('g-recaptcha', {
+        'sitekey': '6Lfn6NsZAAAAAC3mc-hHUcsCD2EDREdaJ66RBlou',
+        'callback': sendMessage,
+        'size': 'invisible'
+      });
+      submitBtn.addEventListener('click', validateForm);
     });
   }
 };
