@@ -142,7 +142,7 @@ const utils = {
         data: postData,
         success: function (response) {
           const status = response.data;
-          if (status) {
+          if (typeof status == boolean && status) {
             resetForm();
             alert('Thank you for your message!');
           } else {
