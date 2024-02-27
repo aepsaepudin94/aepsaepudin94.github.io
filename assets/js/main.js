@@ -161,8 +161,8 @@ const utils = {
           if (typeof status == 'boolean' && status) {
             resetForm();
             alert('Thank you for your message!');
-          } else if (typeof status == 'string') {
-            alert(status);
+          } else if (typeof status == 'object' && status.length == 0) {
+            alert(response.status_text);
           } else {
             alert('Failed to send message!');
           }
